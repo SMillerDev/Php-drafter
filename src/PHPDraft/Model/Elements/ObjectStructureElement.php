@@ -17,6 +17,14 @@ use stdClass;
  */
 class ObjectStructureElement extends BasicStructureElement
 {
+
+    /**
+     * Object key is variable.
+     *
+     * @var boolean
+     */
+    public $variable_key = false;
+
     /**
      * Parse a JSON object to a data structure.
      *
@@ -201,9 +209,14 @@ class ObjectStructureElement extends BasicStructureElement
             $type = '<code>' . $this->type . '</code>';
         }
 
+        $key_info = '';
+        if ($this->variable_key === true) {
+            $key_info = '<button type="button" class="btn btn-secondary" data-toggle="tooltip" data-placement="right" title="This is a variable property">info</button>';
+        }
+
         $return =
             '<tr>' .
-            '<td>' . '<span>' . $this->key . '</span>' . '</td>' .
+            '<td>' . '<span>' . $this->key . '</span>' . $key_info . '</td>' .
             '<td>' . $type . '</td>' .
             '<td> <span class="status">' . $this->status . '</span></td>' .
             '<td>' . $this->description . '</td>' .
