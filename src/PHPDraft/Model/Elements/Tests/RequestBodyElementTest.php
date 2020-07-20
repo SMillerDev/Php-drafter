@@ -305,7 +305,10 @@ class RequestBodyElementTest extends LunrBaseTest
 
         $return = $this->class->parse(json_decode($object), $deps);
         $this->assertInstanceOf(ObjectStructureElement::class, $return);
-        $this->assertInstanceOf(EnumStructureElement::class, $return->value);
+        $this->assertIsArray($return->value);
+        foreach ($return->value as $value) {
+            $this->assertInstanceOf(EnumStructureElement::class, $value);
+        }
     }
 
     /**
@@ -318,7 +321,10 @@ class RequestBodyElementTest extends LunrBaseTest
 
         $return = $this->class->parse(json_decode($object), $deps);
         $this->assertInstanceOf(ObjectStructureElement::class, $return);
-        $this->assertInstanceOf(ArrayStructureElement::class, $return->value);
+        $this->assertIsArray($return->value);
+        foreach ($return->value as $value) {
+            $this->assertInstanceOf(ArrayStructureElement::class, $value);
+        }
     }
 
     /**
@@ -331,6 +337,9 @@ class RequestBodyElementTest extends LunrBaseTest
 
         $return = $this->class->parse(json_decode($object), $deps);
         $this->assertInstanceOf(ObjectStructureElement::class, $return);
-        $this->assertInstanceOf(ObjectStructureElement::class, $return->value);
+        $this->assertIsArray($return->value);
+        foreach ($return->value as $value) {
+            $this->assertInstanceOf(ObjectStructureElement::class, $value);
+        }
     }
 }

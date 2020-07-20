@@ -197,7 +197,7 @@ class ArrayStructureElementTest extends LunrBaseTest
         $val2->description = 'Description';
         $this->class->value = [$val1, $val2];
         $return = $this->class->__toString();
-        $this->assertSame('<ul class="list-group mdl-list"><li class="list-group-item mdl-list__item"><code>string</code> - <span class="example-value pull-right">stuff</span></li><li class="list-group-item mdl-list__item"><a class="code" title="int" href="#object-int">int</a> - <span class="description">Description</span> - <span class="example-value pull-right">class</span></li></ul>', $return);
+        $this->assertSame('<ul class="list-group mdl-list array-list"><li class="list-group-item mdl-list__item"><code>string</code> - <span class="example-value pull-right">stuff</span></li><li class="list-group-item mdl-list__item"><a class="code" title="int" href="#object-int">int</a> - <span class="description">Description</span> - <span class="example-value pull-right">class</span></li></ul>', $return);
     }
 
     /**
@@ -214,6 +214,6 @@ class ArrayStructureElementTest extends LunrBaseTest
         $val2->description = 'Description';
         $this->class->value = [$val1, $val2];
         $return = $this->class->__toString();
-        $this->assertSame('<ul class="list-group mdl-list"><li class="list-group-item mdl-list__item"><a class="code" title="Bike" href="#object-bike">Bike</a> - <span class="example-value pull-right">type</span></li><li class="list-group-item mdl-list__item"><a class="code" title="car" href="#object-car">car</a> - <span class="description">Description</span> - <span class="example-value pull-right">stuff</span></li></ul>', $return);
+        $this->assertSame('<ul class="list-group mdl-list array-list"><li class="list-group-item mdl-list__item"><a class="code" title="Bike" href="#object-bike">Bike</a> - <span class="example-value pull-right">type</span></li><li class="list-group-item mdl-list__item"><a class="code" title="car" href="#object-car">car</a> - <span class="description">Description</span> - <span class="example-value pull-right">stuff</span></li></ul>', $return);
     }
 }

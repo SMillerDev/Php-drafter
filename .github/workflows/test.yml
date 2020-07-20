@@ -62,6 +62,18 @@ jobs:
           name: coverage
           path: coverage.xml
 
+      - name: Render HTML
+        run: php ./phpdraft -f tests/statics/full_test.apib > build/out/output.html
+
+      - name: Test Files
+        uses: Cyb3r-Jak3/html5validator-action@v0.4
+        with:
+          root: build/out/
+          css: true
+
+      - name: Link Checker
+        uses: peter-evans/link-checker@v1
+
   analytics:
     name: Analytics
     needs: test

@@ -66,7 +66,7 @@ class ArrayStructureElement extends BasicStructureElement
             $return .= $item->__toString();
         }
 
-        return '<ul class="list-group mdl-list">' . $return . '</ul>';
+        return '<ul class="list-group mdl-list array-list">' . $return . '</ul>';
     }
 
     /**

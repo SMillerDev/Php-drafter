@@ -58,12 +58,9 @@ class BasicStructureElementTest extends LunrBaseTest
     public function testStringValue($value, $string_value)
     {
         $this->set_reflection_property_value('value', $value);
+        $this->set_reflection_property_value('element', $value);
 
-        $this->mock_function('rand', function () {
-            return 0;
-        });
         $return = $this->class->string_value();
-        $this->unmock_function('rand');
 
         $this->assertSame($string_value, $return);
     }
@@ -72,10 +69,10 @@ class BasicStructureElementTest extends LunrBaseTest
     {
         $return = [];
 
-        $return[] = ['hello', 'hello'];
-        $return[] = [1, 1];
-        $return[] = [true, true];
-        $return[] = [[1], 1];
+        $return['string'] = ['hello', 'hello'];
+        $return['int'] = [1, 1];
+        $return['bool'] = [true, true];
+        $return['array'] = [[1], 1];
 
         $obj        = new ArrayStructureElement();
         $obj->value = 'hello';

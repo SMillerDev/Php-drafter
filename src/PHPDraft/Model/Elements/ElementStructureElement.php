@@ -37,7 +37,7 @@ class ElementStructureElement implements StructureElement
         }
 
         $this->type  = $object->element;
-        $this->value = $object->content ?? null;
+        $this->value = $object->content->content ?? $object->content ?? null;
         $this->description = $object->meta->description->content ?? null;
 
         return $this;

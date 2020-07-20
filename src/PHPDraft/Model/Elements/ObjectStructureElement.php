@@ -47,6 +47,11 @@ class ObjectStructureElement extends BasicStructureElement
         $this->element = $object->element;
         $this->parse_common($object, $dependencies);
 
+        if (isset($object->content->value->attributes->default)) {
+            $default = $object->content->value->attributes->default->content;
+            $this->default = $default->content ?? $default;
+        }
+
         if (isset($object->content) && is_array($object->content)) {
             $this->parse_array_content($object, $dependencies);
             return $this;
@@ -75,6 +80,16 @@ class ObjectStructureElement extends BasicStructureElement
     }
 
     /**
+     * Get a new instance of a class.
+     *
+     * @return ObjectStructureElement
+     */
+    protected function new_instance(): StructureElement
+    {
+        return new self();
+    }
+
+    /**
      * Parse $this->value as a structure based on given content.
      *
      * @param object $object       APIB content
@@ -92,21 +107,12 @@ class ObjectStructureElement extends BasicStructureElement
         $type   = in_array($this->element, ['member']) ? $this->type : $this->element;
         $struct = $this->get_class($type);
 
-        $this->value = $struct->parse($value, $dependencies);
+        $this->value = [$struct->parse($value, $dependencies)];
 
         unset($struct);
         unset($value);
     }
 
-    /**
-     * Get a new instance of a class.
-     *
-     * @return ObjectStructureElement
-     */
-    protected function new_instance(): StructureElement
-    {
-        return new self();
-    }
 
     /**
      * Parse content formed as an array.
@@ -156,15 +162,15 @@ class ObjectStructureElement extends BasicStructureElement
             return '<p>Inherits from <a href="#object-' . strtolower($this->ref) . '">' . $this->ref . '</a></p>';
         }
 
-        if ($this->value === null && $this->key === null && $this->description !== null) {
+        if (is_null($this->value) && is_null($this->default) && is_null($this->key) && $this->description !== null) {
             return '';
         }
 
-        if ($this->value === null && $this->key === null && $this->description === null) {
-            return '<span class="example-value pull-right">{  }</span>';
+        if (is_null($this->value) && is_null($this->default) && is_null($this->key) && is_null($this->description)) {
+            return '{  }';
         }
 
-        if (is_null($this->value)) {
+        if (is_null($this->value) && is_null($this->default)) {
             return $this->construct_string_return('');
         }
 
@@ -180,16 +186,7 @@ class ObjectStructureElement extends BasicStructureElement
             return $this->construct_string_return('<div class="enum-struct">' . $this->value . '</div>');
         }
 
-        $value = '<span class="example-value pull-right">';
-        if (is_bool($this->value)) {
-            $value .= ($this->value) ? 'true' : 'false';
-        } else {
-            $value .= $this->value;
-        }
-
-        $value .= '</span>';
-
-        return $this->construct_string_return($value);
+        return $this->construct_string_return($this->get_return_value());
     }
 
     /**
@@ -217,7 +214,7 @@ class ObjectStructureElement extends BasicStructureElement
             '<td>' . $type . '</td>' .
             '<td> <span class="status">' . $this->status . '</span></td>' .
             '<td>' . $this->description . '</td>' .
-            '<td>' . $value . '</td>' .
+            '<td>' . $this->get_return_value() . '</td>' .
             '</tr>';
     }
 }

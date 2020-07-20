@@ -156,7 +156,8 @@ class EnumStructureElementTest extends LunrBaseTest
         $base2->key         = new ElementStructureElement();
         $base2->key->type   = 'string';
         $base2->key->value  = 'car_id_list';
-        $base2->value       = 'world';
+        $base2->value       = 'car_id_list';
+        $base2->default     = 'world';
         $base2->status      = null;
         $base2->element     = 'enum';
         $base2->type        = 'string';

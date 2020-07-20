@@ -37,6 +37,12 @@ abstract class BasicStructureElement implements StructureElement
      */
     public $element = null;
     /**
+     * Object default.
+     *
+     * @var mixed
+     */
+    public $default = null;
+    /**
      * Object value.
      *
      * @var mixed
@@ -143,6 +149,33 @@ abstract class BasicStructureElement implements StructureElement
         if (!in_array($this->type, self::DEFAULTS) && $this->type !== null) {
             $dependencies[] = $this->type;
         }
+
+        if (isset($object->attributes->default)) {
+            $this->default = $object->attributes->default->content->content;
+        }
+    }
+
+    /**
+     * Get a string representation of the value.
+     *
+     * @param bool $flat get a flat representation of the item.
+     *
+     * @return string
+     */
+    public function string_value($flat = false)
+    {
+        if (is_array($this->value) && $this->value !== []) {
+            if (is_subclass_of($this->value[0], StructureElement::class) && $flat === false) {
+                return $this->value[0]->__toString();
+            }
+
+            return $this->value[0];
+        }
+
+        if (is_subclass_of($this->value, BasicStructureElement::class) && $flat === true) {
+            return is_array($this->value->value) ? array_keys($this->value->value)[0] : $this->value->value;
+        }
+        return $this->value;
     }
 
     /**
@@ -163,27 +196,33 @@ abstract class BasicStructureElement implements StructureElement
     }
 
     /**
-     * Get a string representation of the value.
-     *
-     * @param bool $flat get a flat representation of the item.
+     * Get the value representation.
      *
      * @return string
      */
-    public function string_value($flat = false)
+    protected function get_return_value(): string
     {
-        if (is_array($this->value)) {
-            $value_key = rand(0, count($this->value));
-            if (is_subclass_of($this->value[$value_key], StructureElement::class) && $flat === false) {
-                return $this->value[$value_key]->string_value($flat);
-            }
-
-            return $this->value[$value_key];
+        if (is_object($this->value)) {
+            return $this->value->__toString();
+        }
+        $value = $this->value;
+        if (is_bool($this->value)) {
+            $value = ($this->value) ? 'true' : 'false';
         }
 
-        if (is_subclass_of($this->value, BasicStructureElement::class) && $flat === true) {
-            return is_array($this->value->value) ? array_keys($this->value->value)[0] : $this->value->value;
+        $default = $this->default;
+        if (is_bool($this->default)) {
+            $default = ($this->default) ? 'true' : 'false';
         }
-        return $this->value;
+
+        $return_val = "<span class=\"example-value pull-right\">$value</span>";
+
+        if (!is_null($default)) {
+            $return_val = "Default: <span class='example-value pull-right'>$default</span>";
+            $return_val .= is_null($value) ? '' : "<br/>Example: $return_val";
+        }
+
+        return $return_val;
     }
 
     /**
